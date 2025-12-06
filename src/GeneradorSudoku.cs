@@ -4,11 +4,48 @@ class GeneradorSudoku
 {
     static void Main()
     {
-        var sudoku = new Sudoku(blockSize: 5);
+        var sudoku = new Sudoku(blockSize: 3);
 
         sudoku.GenerateSolution();
         sudoku.RemoveRandomCells(removalPercentage: 0.5f);
-        sudoku.Print();
+        Console.WriteLine(sudoku.ToString());
+        Console.WriteLine(sudoku.IsValid());
+    }
+}
+
+public static class SudokuSymbols
+{
+    public const string EmptyCell = ".";
+    public const string CellCorner = "+";
+    public const string CellVertical = "|";
+    public const char CellHorizontal = '-';
+}
+
+public static class SudokuUtils
+{
+    public static void Shuffle<T>(T[] array, Random rng)
+    {
+        for (int i = array.Length - 1; i > 0; i--)
+        {
+            int j = rng.Next(i + 1);
+            (array[i], array[j]) = (array[j], array[i]);
+        }
+    }
+
+    public static int[] GeneratePermutedIndex(int BlockSize, Random rng)
+    {
+        var result = new List<int>(BlockSize * BlockSize);
+        var bandIndices = Enumerable.Range(0, BlockSize).ToArray();
+        Shuffle(bandIndices, rng);
+
+        foreach (var band in bandIndices)
+        {
+            var local = Enumerable.Range(band * BlockSize, BlockSize).ToArray();
+            Shuffle(local, rng);
+            result.AddRange(local);
+        }
+
+        return result.ToArray();
     }
 }
 
@@ -16,14 +53,10 @@ public class Sudoku
 {
     private readonly int _blockSize;
     public int Size { get; }
-    private readonly int[,] _grid;
+    private int[,] _grid;
     private readonly Random _rng;
-    private const string _emptySymbol = ".";
-    private const string _cellCornerSymbol = "+";
-    private const string _cellVerticalSymbol = "|";
-    private const char _cellHorizontalSymbol = '-';
 
-    public Sudoku(int blockSize)
+    public Sudoku(int blockSize, int? rngSeed = null)
     {
         if (blockSize < 2)
             throw new ArgumentException("blockSize debe ser >= 2", nameof(blockSize));
@@ -31,15 +64,10 @@ public class Sudoku
         _blockSize = blockSize;
         Size = blockSize * blockSize;
         _grid = new int[Size, Size];
-        _rng = new Random();
+        _rng = new Random(rngSeed ?? Random.Shared.Next());
     }
 
     public int GetValue(int row, int col) => _grid[row, col];
-
-    public void Print()
-    {
-        Console.WriteLine(BuildBoardString());
-    }
 
     public bool CanPlaceNumber(int row, int col, int value)
     {
@@ -63,13 +91,30 @@ public class Sudoku
         return true;
     }
 
-    private void Shuffle<T>(T[] array)
+    public bool IsValid()
     {
-        for (int i = array.Length - 1; i > 0; i--)
+        for (int row = 0; row < Size; row++)
         {
-            int j = _rng.Next(i + 1);
-            (array[i], array[j]) = (array[j], array[i]);
+            for (int col = 0; col < Size; col++)
+            {
+                int cellValue = _grid[row, col];
+                if (cellValue == 0)
+                {
+                    continue;
+                }
+
+                _grid[row, col] = 0;
+                bool canPlace = CanPlaceNumber(row, col, cellValue);
+                _grid[row, col] = cellValue;
+
+                if (!canPlace)
+                {
+                    return false;
+                }
+            }
         }
+
+        return true;
     }
 
     public void GenerateSolution()
@@ -80,7 +125,7 @@ public class Sudoku
                 baseGrid[row, col] = (((row * _blockSize) + (row / _blockSize) + col) % Size) + 1;
 
         var values = Enumerable.Range(1, Size).ToArray();
-        Shuffle(values);
+        SudokuUtils.Shuffle(values, _rng);
 
         var mapped = new int[Size + 1];
         for (int i = 1; i <= Size; i++)
@@ -93,27 +138,11 @@ public class Sudoku
             for (int col = 0; col < Size; col++)
                 mappedGrid[row, col] = mapped[baseGrid[row, col]];
 
-        var newRowOrder = GeneratePermutedIndex();
-        var newColOrder = GeneratePermutedIndex();
+        var newRowOrder = SudokuUtils.GeneratePermutedIndex(_blockSize, _rng);
+        var newColOrder = SudokuUtils.GeneratePermutedIndex(_blockSize, _rng);
         for (int row = 0; row < Size; row++)
             for (int col = 0; col < Size; col++)
                 _grid[row, col] = mappedGrid[newRowOrder[row], newColOrder[col]];
-    }
-
-    private int[] GeneratePermutedIndex()
-    {
-        var result = new List<int>(Size);
-        var bandIndices = Enumerable.Range(0, _blockSize).ToArray();
-        Shuffle(bandIndices);
-
-        foreach (var band in bandIndices)
-        {
-            var local = Enumerable.Range(band * _blockSize, _blockSize).ToArray();
-            Shuffle(local);
-            result.AddRange(local);
-        }
-
-        return result.ToArray();
     }
 
     public void RemoveRandomCells(float removalPercentage)
@@ -123,7 +152,7 @@ public class Sudoku
         toRemove = Math.Clamp(toRemove, 0, totalCellsCount);
 
         var positions = Enumerable.Range(0, totalCellsCount).ToArray();
-        Shuffle(positions);
+        SudokuUtils.Shuffle(positions, _rng);
 
         int removed = 0;
         for (int i = 0; i < positions.Length && removed < toRemove; i++)
@@ -139,35 +168,45 @@ public class Sudoku
         }
     }
 
-    private string BuildBoardString()
+    override
+    public string ToString()
     {
         var sb = new StringBuilder();
         int cellWidth = (Size <= 9) ? 1 : 2;
-        string sepSegment = new string(_cellHorizontalSymbol, cellWidth + 2);
+        string sepSegment = new string(SudokuSymbols.CellHorizontal, cellWidth + 2);
 
         var horizontal = new StringBuilder();
-        horizontal.Append(_cellCornerSymbol);
+        horizontal.Append(SudokuSymbols.CellCorner);
+
         for (int i = 0; i < Size; i++)
         {
             horizontal.Append(sepSegment);
-            if ((i + 1) % _blockSize == 0) horizontal.Append(_cellCornerSymbol);
+            if ((i + 1) % _blockSize == 0)
+            {
+                horizontal.Append(SudokuSymbols.CellCorner);
+            }
         }
 
-        for (int r = 0; r < Size; r++)
+        for (int row = 0; row < Size; row++)
         {
-            if (r % _blockSize == 0) sb.AppendLine(horizontal.ToString());
-
-            for (int c = 0; c < Size; c++)
+            if (row % _blockSize == 0)
             {
-                if (c % _blockSize == 0) sb.Append(_cellVerticalSymbol);
-
-                string cellText = _grid[r, c] == 0 ? _emptySymbol : _grid[r, c].ToString();
-                sb.Append(" ");
-                sb.Append(cellText.PadLeft(cellWidth));
-                sb.Append(" ");
+                sb.AppendLine(horizontal.ToString());
             }
 
-            sb.AppendLine(_cellVerticalSymbol);
+            for (int col = 0; col < Size; col++)
+            {
+                if (col % _blockSize == 0)
+                {
+                    sb.Append(SudokuSymbols.CellVertical);
+                }
+
+                int cellValue = _grid[row, col];
+                string cellText = cellValue == 0 ? SudokuSymbols.EmptyCell : cellValue.ToString();
+                sb.Append(" " + cellText.PadLeft(cellWidth) + " ");
+            }
+
+            sb.AppendLine(SudokuSymbols.CellVertical);
         }
 
         sb.AppendLine(horizontal.ToString());
