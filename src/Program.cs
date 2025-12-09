@@ -7,11 +7,7 @@ class Program
         var sudoku = new SudokuBoard(blockSize: 3);
         var sudokuGenerator = new SudokuGenerator(sudoku);
 
-        sudokuGenerator.GenerateSolution();
-        Console.WriteLine(sudoku.ToString());
-        Console.WriteLine();
-
-        sudokuGenerator.RemoveRandomCells(removalPercentage: 0.5f);
+        sudokuGenerator.GeneratePuzzle(removalPercentage: 0.5f);
         Console.WriteLine(sudoku.ToString());
 
         var solvedSudoku = SudokuSolver.TrySolve(sudoku, maxDegreeOfParallelism: 8);
