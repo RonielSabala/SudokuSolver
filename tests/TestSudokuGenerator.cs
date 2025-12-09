@@ -14,8 +14,7 @@ namespace Tests
             var board = new SudokuBoard(blockSize: 3);
             var generator = new SudokuGenerator(board);
 
-
-            generator.GenerateSolution();
+            generator.GeneratePuzzle(0.0f); // 0% celdas removidas, tablero completo
 
             // Esto es para verificar que el tablero está completamente lleno.
             for (int row = 0; row < 9; row++)
@@ -33,8 +32,7 @@ namespace Tests
             var board = new SudokuBoard(blockSize: 3);
             var generator = new SudokuGenerator(board);
 
-
-            generator.GenerateSolution();
+            generator.GeneratePuzzle(0.0f);
 
 
             Assert.True(board.IsValid());
@@ -49,9 +47,8 @@ namespace Tests
             var generator1 = new SudokuGenerator(board1, rngSeed: 12345);
             var generator2 = new SudokuGenerator(board2, rngSeed: 12345);
 
-
-            generator1.GenerateSolution();
-            generator2.GenerateSolution();
+            generator1.GeneratePuzzle(0.0f);
+            generator2.GeneratePuzzle(0.0f);
 
             // Deben ser iguales ambos tableros para la misma semilla.
             for (int row = 0; row < 9; row++)
@@ -70,9 +67,8 @@ namespace Tests
             var generator1 = new SudokuGenerator(board1);
             var generator2 = new SudokuGenerator(board2);
 
-
-            generator1.GenerateSolution();
-            generator2.GenerateSolution();
+            generator1.GeneratePuzzle(0.0f);
+            generator2.GeneratePuzzle(0.0f);
 
             // Esto verfica que al menos una celda es diferente entre ambos tableros.
             bool sonDiferentes = false;
@@ -93,7 +89,7 @@ namespace Tests
             var board = new SudokuBoard(blockSize: 2);
             var generator = new SudokuGenerator(board);
 
-            generator.GenerateSolution();
+            generator.GeneratePuzzle(0.0f);
 
 
             Assert.True(board.IsValid());
@@ -112,9 +108,7 @@ namespace Tests
 
             var board = new SudokuBoard(blockSize: 3);
             var generator = new SudokuGenerator(board, rngSeed: 12345);
-            generator.GenerateSolution();
-
-            generator.RemoveRandomCells(0.5f); // Va a remover el 50% de las celdas este código.
+            generator.GeneratePuzzle(0.5f); // Va a remover el 50% de las celdas este código.
 
             // Contar cuántas celdas están vacías.
             int celdasVacias = 0;
@@ -134,10 +128,7 @@ namespace Tests
 
             var board = new SudokuBoard(blockSize: 3);
             var generator = new SudokuGenerator(board);
-            generator.GenerateSolution();
-
-
-            generator.RemoveRandomCells(0.6f);
+            generator.GeneratePuzzle(0.6f);
 
 
             Assert.True(board.IsValid());
@@ -154,10 +145,7 @@ namespace Tests
 
             var board = new SudokuBoard(blockSize: 3);
             var generator = new SudokuGenerator(board);
-            generator.GenerateSolution();
-
-
-            generator.RemoveRandomCells(porcentaje);
+            generator.GeneratePuzzle(porcentaje);
 
 
             Assert.True(board.IsValid());
@@ -169,10 +157,7 @@ namespace Tests
 
             var board = new SudokuBoard(blockSize: 3);
             var generator = new SudokuGenerator(board, rngSeed: 12345);
-            generator.GenerateSolution();
-
-
-            generator.RemoveRandomCells(0.0f);
+            generator.GeneratePuzzle(0.0f);
 
             // Ninguna celda debe estar vacía para el caso de esta prueba porque el porcentaje es 0.
             for (int row = 0; row < 9; row++)
@@ -188,10 +173,7 @@ namespace Tests
 
             var board = new SudokuBoard(blockSize: 3);
             var generator = new SudokuGenerator(board, rngSeed: 12345);
-            generator.GenerateSolution();
-
-
-            generator.RemoveRandomCells(1.0f);
+            generator.GeneratePuzzle(1.0f);
 
             // Contrario al caso anterior, todas las celdas deben estar vacías.
             for (int row = 0; row < 9; row++)

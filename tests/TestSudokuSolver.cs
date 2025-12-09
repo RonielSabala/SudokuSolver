@@ -83,7 +83,7 @@ namespace Tests
 
             var board = new SudokuBoard(blockSize: 3);
             var generator = new SudokuGenerator(board, rngSeed: 12345);
-            generator.GenerateSolution();
+            generator.GeneratePuzzle(0.0f);
 
 
             var solucion = SudokuSolver.TrySolve(board, maxDegreeOfParallelism: 1);

@@ -218,7 +218,7 @@ namespace Tests
 
             var board = new SudokuBoard(blockSize: 3);
             var generator = new SudokuGenerator(board, rngSeed: 12345); // Usamos una semilla fija para tener resultados ya predecibles.
-            generator.GenerateSolution();
+            generator.GeneratePuzzle(0.0f);
 
 
             bool resultado = board.IsValid();
@@ -233,8 +233,7 @@ namespace Tests
 
             var board = new SudokuBoard(blockSize: 3);
             var generator = new SudokuGenerator(board, rngSeed: 12345);
-            generator.GenerateSolution();
-            generator.RemoveRandomCells(0.5f);
+            generator.GeneratePuzzle(0.5f);
 
 
             bool resultado = board.IsValid();
