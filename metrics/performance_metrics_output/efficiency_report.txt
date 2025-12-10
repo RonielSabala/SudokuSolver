@@ -1,0 +1,24 @@
+﻿Reporte de eficiencia
+----------------------
+Removal: 30% | Iteraciones: 3
+
+BlockSize: 4
+  Hilos=2: Eficiencia = 879.73%
+  Hilos=4: Eficiencia = 567.54%
+  Hilos=8: Eficiencia = 272.84%
+
+BlockSize: 6
+  Hilos=2: Eficiencia = 65.44%
+  Hilos=4: Eficiencia = 33.86%
+  Hilos=8: Eficiencia = 18.77%
+
+BlockSize: 8
+  Hilos=2: Eficiencia = 55.24%
+  Hilos=4: Eficiencia = 28.04%
+  Hilos=8: Eficiencia = 14.08%
+
+BlockSize: 9
+  Hilos=2: Eficiencia = 50.55%
+  Hilos=4: Eficiencia = 26.70%
+  Hilos=8: Eficiencia = 12.86%
+

@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Sudoku Solver 3D Surface Plot (removal=0.400)</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h2 { margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+        <h2>Sudoku solver benchmark — surface (X:blockSize, Y:hilos, Z:tiempo ms)</h2>
+    <p>RemovalPercentage = 0.400. Timeout por intento: 2 s.</p>
+
+    <div id="plot_surface" style="width:100%;height:720px;"></div>
+    <script>
+        (function() {
+            var solvedSurface = {
+                z: [[0.1871,0.556,195.4178,"NaN","NaN","NaN","NaN","NaN","NaN"],[0.162,0.3974,203.9445,"NaN","NaN","NaN","NaN","NaN","NaN"],[0.1904,0.7178,323.175,"NaN","NaN","NaN","NaN","NaN","NaN"],[0.1807,0.9663,759.1892,"NaN","NaN","NaN","NaN","NaN","NaN"]],
+                x: [4,5,6,7,8,9,10,11,12],
+                y: [1,2,4,8],
+                type: 'surface',
+                colorscale: 'Viridis',
+                showscale: true,
+                name: 'Tiempo (ms)'
+            };
+
+            var unsolvedSurface = {
+                z: [["NaN","NaN","NaN","NaN","NaN",3.281,6.2571,8.6541,14.5693],["NaN","NaN","NaN","NaN","NaN",4.0413,7.1319,12.0242,16.6208],["NaN","NaN","NaN","NaN","NaN",7.2445,13.1885,23.1519,43.1868],["NaN","NaN","NaN","NaN","NaN",11.58,16.7681,28.0766,34.9799]],
+                x: [4,5,6,7,8,9,10,11,12],
+                y: [1,2,4,8],
+                type: 'surface',
+                colorscale: [['0','rgb(255,200,200)'],['1','rgb(200,0,0)']],
+                opacity: 0.45,
+                showscale: false,
+                name: 'No resuelto (superficie)'
+            };
+
+            var timeouts = {
+                x: [7,8,7,8,7,8,7,8],
+                y: [0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4],
+                z: [2000,2000,2000,2000,2000,2000,2000,2000],
+                mode: 'markers',
+                type: 'scatter3d',
+                marker: {
+                    color: 'orange',
+                    size: 6,
+                    symbol: 'diamond'
+                },
+                text: ["blockSize=7, removal=0.40\\nTimeout","blockSize=8, removal=0.40\\nTimeout","blockSize=7, removal=0.40\\nTimeout","blockSize=8, removal=0.40\\nTimeout","blockSize=7, removal=0.40\\nTimeout","blockSize=8, removal=0.40\\nTimeout","blockSize=7, removal=0.40\\nTimeout","blockSize=8, removal=0.40\\nTimeout"],
+                hoverinfo: 'text',
+                name: 'Timeout'
+            };
+
+            var data = [solvedSurface, unsolvedSurface, timeouts];
+
+            var layout = {
+                title: 'Removal = 0.400',
+                autosize: true,
+                scene: {
+                    xaxis: {title: 'blockSize (sub-square size)'},
+                    yaxis: {title: 'hilos'},
+                    zaxis: {title: 'tiempo (ms)'}
+                },
+                legend: {orientation: 'h'}
+            };
+
+            Plotly.newPlot('plot_surface', data, layout);
+        })();
+    </script>
+
+    <hr/>
+    <p>Generado: 2025-12-09 20:18:29</p>
+</body>
+</html>

@@ -1,0 +1,108 @@
+﻿<!doctype html>
+<html lang="es"> 
+<head>
+  <meta charset="utf-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <title>Resumen de rendimiento - Sudoku Solver</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; color: #222; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }
+    th { background: #f0f0f0; text-align: center; }
+    caption { text-align: left; font-weight: bold; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+<h1>Resumen de rendimiento</h1>
+<p>Porcentaje de celdas removidas: 30%. Iteraciones por configuración: 3.</p>
+<table>
+<caption>Resumen de tiempos de ejecución (ms)</caption>
+<tr><th>BlockSize</th>
+<th>Hilos 1</th>
+<th>Hilos 2</th>
+<th>Hilos 4</th>
+<th>Hilos 8</th>
+</tr>
+<tr><td style='text-align:center'>4</td>
+<td>1.833</td>
+<td>0.104</td>
+<td>0.081</td>
+<td>0.084</td>
+</tr>
+<tr><td style='text-align:center'>6</td>
+<td>1.085</td>
+<td>0.829</td>
+<td>0.801</td>
+<td>0.723</td>
+</tr>
+<tr><td style='text-align:center'>8</td>
+<td>11.693</td>
+<td>10.584</td>
+<td>10.427</td>
+<td>10.383</td>
+</tr>
+<tr><td style='text-align:center'>9</td>
+<td>2.742</td>
+<td>2.712</td>
+<td>2.567</td>
+<td>2.664</td>
+</tr>
+</table>
+<table>
+<caption>Resumen de speedup</caption>
+<tr><th>BlockSize</th>
+<th>Hilos 2</th>
+<th>Hilos 4</th>
+<th>Hilos 8</th>
+</tr>
+<tr><td style='text-align:center'>4</td>
+<td>17.595x</td>
+<td>22.701x</td>
+<td>21.827x</td>
+</tr>
+<tr><td style='text-align:center'>6</td>
+<td>1.309x</td>
+<td>1.354x</td>
+<td>1.501x</td>
+</tr>
+<tr><td style='text-align:center'>8</td>
+<td>1.105x</td>
+<td>1.121x</td>
+<td>1.126x</td>
+</tr>
+<tr><td style='text-align:center'>9</td>
+<td>1.011x</td>
+<td>1.068x</td>
+<td>1.029x</td>
+</tr>
+</table>
+<table>
+<caption>Resumen de eficiencia (%)</caption>
+<tr><th>BlockSize</th>
+<th>Hilos 2</th>
+<th>Hilos 4</th>
+<th>Hilos 8</th>
+</tr>
+<tr><td style='text-align:center'>4</td>
+<td>879.73%</td>
+<td>567.54%</td>
+<td>272.84%</td>
+</tr>
+<tr><td style='text-align:center'>6</td>
+<td>65.44%</td>
+<td>33.86%</td>
+<td>18.77%</td>
+</tr>
+<tr><td style='text-align:center'>8</td>
+<td>55.24%</td>
+<td>28.04%</td>
+<td>14.08%</td>
+</tr>
+<tr><td style='text-align:center'>9</td>
+<td>50.55%</td>
+<td>26.70%</td>
+<td>12.86%</td>
+</tr>
+</table>
+</body>
+</html>

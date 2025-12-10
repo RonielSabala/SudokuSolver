@@ -1,0 +1,24 @@
+﻿Reporte de speedup
+----------------------
+Removal: 30% | Iteraciones: 3
+
+BlockSize: 4
+  Hilos=2: Speedup = 17.595x (ideal: 2.0x)
+  Hilos=4: Speedup = 22.701x (ideal: 4.0x)
+  Hilos=8: Speedup = 21.827x (ideal: 8.0x)
+
+BlockSize: 6
+  Hilos=2: Speedup = 1.309x (ideal: 2.0x)
+  Hilos=4: Speedup = 1.354x (ideal: 4.0x)
+  Hilos=8: Speedup = 1.501x (ideal: 8.0x)
+
+BlockSize: 8
+  Hilos=2: Speedup = 1.105x (ideal: 2.0x)
+  Hilos=4: Speedup = 1.121x (ideal: 4.0x)
+  Hilos=8: Speedup = 1.126x (ideal: 8.0x)
+
+BlockSize: 9
+  Hilos=2: Speedup = 1.011x (ideal: 2.0x)
+  Hilos=4: Speedup = 1.068x (ideal: 4.0x)
+  Hilos=8: Speedup = 1.029x (ideal: 8.0x)
+
