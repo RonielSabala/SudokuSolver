@@ -12,7 +12,7 @@ class PerformanceMetrics
     static readonly string OutputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "performance_metrics_output");
     static readonly int[] RecuentosHilos = new int[] { 1, 2, 4, 8 };
     static readonly int[] blockSizes = new int[] { 4, 6, 8, 9 };
-    static readonly double PorcentajeRemovalCeldas = 0.30; // 30% de celdas removidas, porque este.
+    static readonly double PorcentajeRemovalCeldas = 0.30; // 30% de celdas removidas, porque este es un valor común en sudokus.
 
     public static void Run()
     {
@@ -118,8 +118,6 @@ class PerformanceMetrics
 
             foreach (var hilos in RecuentosHilos)
             {
-                if (hilos == 1) continue;
-
                 if (!tiempos_ejecucion[blockSize].ContainsKey(hilos) || double.IsNaN(tiempos_ejecucion[blockSize][hilos]))
                 {
                     Console.WriteLine($"  Hilos={hilos}: N/A");
@@ -134,7 +132,7 @@ class PerformanceMetrics
 
                 Console.WriteLine($"  Hilos={hilos}: Time={tiempo_paralelo:F3}ms, Speedup={speedup:F3}x, Eficiencia={eficiencia:F2}%");
 
-                reporte_speedup.AppendLine($"  Hilos={hilos}: Speedup = {speedup:F3}x (ideal: {hilos:F1}x)"); // Texto del reporte que indica el valor ideal de speedup.
+                reporte_speedup.AppendLine($"  Hilos={hilos}: Speedup = {speedup:F3}x (ideal: {hilos:F1}x)");
                 reporte_eficiencia.AppendLine($"  Hilos={hilos}: Eficiencia = {eficiencia:F2}%");
             }
 
@@ -255,8 +253,7 @@ class PerformanceMetrics
         Console.Write("BlockSize");
         foreach (var hilos in RecuentosHilos)
         {
-            if (hilos > 1)
-                Console.Write($"  |  {hilos}T Speedup");
+            Console.Write($"  |  {hilos}T Speedup");
         }
         Console.WriteLine();
 
@@ -266,7 +263,12 @@ class PerformanceMetrics
 
             if (!tiempos_ejecucion[blockSize].ContainsKey(1) || double.IsNaN(tiempos_ejecucion[blockSize][1]))
             {
-                Console.WriteLine("  |  N/A (no seq)");
+                // If sequential is missing, print N/A for all thread counts
+                foreach (var hilos in RecuentosHilos)
+                {
+                    Console.Write($"  |    N/A");
+                }
+                Console.WriteLine();
                 continue;
             }
 
@@ -274,8 +276,6 @@ class PerformanceMetrics
 
             foreach (var hilos in RecuentosHilos)
             {
-                if (hilos == 1) continue;
-
                 if (tiempos_ejecucion[blockSize].ContainsKey(hilos) && !double.IsNaN(tiempos_ejecucion[blockSize][hilos]))
                 {
                     double speedup = tiempo_secuencial / tiempos_ejecucion[blockSize][hilos];
@@ -295,8 +295,7 @@ class PerformanceMetrics
         Console.Write("BlockSize");
         foreach (var hilos in RecuentosHilos)
         {
-            if (hilos > 1)
-                Console.Write($"  |  {hilos}T Eff(%)");
+            Console.Write($"  |  {hilos}T Eff(%)");
         }
         Console.WriteLine();
 
@@ -306,7 +305,12 @@ class PerformanceMetrics
 
             if (!tiempos_ejecucion[blockSize].ContainsKey(1) || double.IsNaN(tiempos_ejecucion[blockSize][1]))
             {
-                Console.WriteLine("  |  N/A");
+                // If sequential is missing, print N/A for all thread counts
+                foreach (var hilos in RecuentosHilos)
+                {
+                    Console.Write($"  |  N/A");
+                }
+                Console.WriteLine();
                 continue;
             }
 
@@ -314,8 +318,6 @@ class PerformanceMetrics
 
             foreach (var hilos in RecuentosHilos)
             {
-                if (hilos == 1) continue;
-
                 if (tiempos_ejecucion[blockSize].ContainsKey(hilos) && !double.IsNaN(tiempos_ejecucion[blockSize][hilos]))
                 {
                     double speedup = tiempo_secuencial / tiempos_ejecucion[blockSize][hilos];
@@ -394,7 +396,7 @@ class PerformanceMetrics
             constructorHTML.AppendLine("<caption>Resumen de speedup</caption>");
             constructorHTML.AppendLine("<tr><th>BlockSize</th>");
             foreach (var hilos in RecuentosHilos)
-                if (hilos > 1) constructorHTML.AppendLine($"<th>Hilos {hilos}</th>");
+                constructorHTML.AppendLine($"<th>Hilos {hilos}</th>");
             constructorHTML.AppendLine("</tr>");
 
             foreach (var blockSize in blockSizes)
@@ -402,14 +404,15 @@ class PerformanceMetrics
                 constructorHTML.AppendLine($"<tr><td style='text-align:center'>{blockSize}</td>");
                 if (!tiempos_ejecucion.ContainsKey(blockSize) || !tiempos_ejecucion[blockSize].ContainsKey(1) || double.IsNaN(tiempos_ejecucion[blockSize][1]))
                 {
-                    constructorHTML.AppendLine("<td colspan='" + (RecuentosHilos.Length - 1) + "'>N/A</td>");
+                    // sequential missing -> N/A for all thread columns
+                    for (int i = 0; i < RecuentosHilos.Length; i++)
+                        constructorHTML.AppendLine("<td>N/A</td>");
                 }
                 else
                 {
                     double tiempo_secuencial = tiempos_ejecucion[blockSize][1];
                     foreach (var hilos in RecuentosHilos)
                     {
-                        if (hilos == 1) continue;
                         string valor = "N/A";
                         if (tiempos_ejecucion[blockSize].ContainsKey(hilos) && !double.IsNaN(tiempos_ejecucion[blockSize][hilos]))
                         {
@@ -423,12 +426,12 @@ class PerformanceMetrics
             }
             constructorHTML.AppendLine("</table>");
 
-            // Tabla de ka eficiencia.
+            // Tabla de eficiencia.
             constructorHTML.AppendLine("<table>");
             constructorHTML.AppendLine("<caption>Resumen de eficiencia (%)</caption>");
             constructorHTML.AppendLine("<tr><th>BlockSize</th>");
             foreach (var hilos in RecuentosHilos)
-                if (hilos > 1) constructorHTML.AppendLine($"<th>Hilos {hilos}</th>");
+                constructorHTML.AppendLine($"<th>Hilos {hilos}</th>");
             constructorHTML.AppendLine("</tr>");
 
             foreach (var blockSize in blockSizes)
@@ -436,14 +439,15 @@ class PerformanceMetrics
                 constructorHTML.AppendLine($"<tr><td style='text-align:center'>{blockSize}</td>");
                 if (!tiempos_ejecucion.ContainsKey(blockSize) || !tiempos_ejecucion[blockSize].ContainsKey(1) || double.IsNaN(tiempos_ejecucion[blockSize][1]))
                 {
-                    constructorHTML.AppendLine("<td colspan='" + (RecuentosHilos.Length - 1) + "'>N/A</td>");
+                    // sequential missing -> N/A for all thread columns
+                    for (int i = 0; i < RecuentosHilos.Length; i++)
+                        constructorHTML.AppendLine("<td>N/A</td>");
                 }
                 else
                 {
                     double tiempo_secuencial = tiempos_ejecucion[blockSize][1];
                     foreach (var hilos in RecuentosHilos)
                     {
-                        if (hilos == 1) continue;
                         string valor = "N/A";
                         if (tiempos_ejecucion[blockSize].ContainsKey(hilos) && !double.IsNaN(tiempos_ejecucion[blockSize][hilos]))
                         {

@@ -3,22 +3,26 @@
 Removal: 30% | Iteraciones: 3
 
 BlockSize: 4
-  Hilos=2: Eficiencia = 879.73%
-  Hilos=4: Eficiencia = 567.54%
-  Hilos=8: Eficiencia = 272.84%
+  Hilos=1: Eficiencia = 100.00%
+  Hilos=2: Eficiencia = 611.62%
+  Hilos=4: Eficiencia = 416.60%
+  Hilos=8: Eficiencia = 227.64%
 
 BlockSize: 6
-  Hilos=2: Eficiencia = 65.44%
-  Hilos=4: Eficiencia = 33.86%
-  Hilos=8: Eficiencia = 18.77%
+  Hilos=1: Eficiencia = 100.00%
+  Hilos=2: Eficiencia = 53.84%
+  Hilos=4: Eficiencia = 21.07%
+  Hilos=8: Eficiencia = 12.81%
 
 BlockSize: 8
-  Hilos=2: Eficiencia = 55.24%
-  Hilos=4: Eficiencia = 28.04%
-  Hilos=8: Eficiencia = 14.08%
+  Hilos=1: Eficiencia = 100.00%
+  Hilos=2: Eficiencia = 52.59%
+  Hilos=4: Eficiencia = 28.01%
+  Hilos=8: Eficiencia = 13.76%
 
 BlockSize: 9
-  Hilos=2: Eficiencia = 50.55%
-  Hilos=4: Eficiencia = 26.70%
-  Hilos=8: Eficiencia = 12.86%
+  Hilos=1: Eficiencia = 100.00%
+  Hilos=2: Eficiencia = 53.65%
+  Hilos=4: Eficiencia = 26.80%
+  Hilos=8: Eficiencia = 13.28%
 
